@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package customer.v1;
+
+option go_package = "github.com/0utl1er-tech/prism-backend/gen/pb/customer/v1;customerv1";
+
+service CustomerService {
+  rpc CreateCustomer(CreateCustomerRequest) returns (CreateCustomerResponse);
+}
+
+message CreateCustomerRequest {
+  string name = 1;
+  string email = 2;
+  string phone = 3;
+}
+
+message CreateCustomerResponse {
+  string id = 1;
+}

@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package contact.v1;
+
+option go_package = "github.com/0utl1er-tech/prism-backend/gen/pb/contact/v1;contactv1";
+
+service ContactService {
+  rpc CreateContact(CreateContactRequest) returns (CreateContactResponse);
+}
+
+message CreateContactRequest {
+  string name = 1;
+  string email = 2;
+  string phone = 3;
+  string message = 4;
+}
+
+message CreateContactResponse {
+  string id = 1;
+}

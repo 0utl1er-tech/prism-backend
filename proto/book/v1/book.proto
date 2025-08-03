@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package book.v1;
+
+option go_package = "github.com/0utl1er-tech/prism-backend/gen/pb/book/v1;bookv1";
+
+service BookService {
+  rpc CreateBook(CreateBookRequest) returns (CreateBookResponse);
+}
+
+message CreateBookRequest {}
+
+message CreateBookResponse {}

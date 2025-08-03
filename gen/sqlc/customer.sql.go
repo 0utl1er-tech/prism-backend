@@ -15,7 +15,7 @@ import (
 const createCustomer = `-- name: CreateCustomer :one
 INSERT INTO "Customer" (id, book_id, category_id, name, corporation, address, leader, pic, memo)
 VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
-RETURNING id, book_id, category_id, contact_id, redial_id, name, corporation, address, leader, pic, memo, created_at
+RETURNING id, book_id, category_id, name, corporation, address, leader, pic, memo, created_at
 `
 
 type CreateCustomerParams struct {
@@ -47,8 +47,6 @@ func (q *Queries) CreateCustomer(ctx context.Context, arg CreateCustomerParams) 
 		&i.ID,
 		&i.BookID,
 		&i.CategoryID,
-		&i.ContactID,
-		&i.RedialID,
 		&i.Name,
 		&i.Corporation,
 		&i.Address,

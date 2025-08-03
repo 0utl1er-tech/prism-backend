@@ -6,10 +6,26 @@ package db
 
 import (
 	"context"
+
+	"github.com/google/uuid"
 )
 
 type Querier interface {
+	CreateBook(ctx context.Context, arg CreateBookParams) (Book, error)
+	CreateCategory(ctx context.Context, arg CreateCategoryParams) (Category, error)
+	CreateContact(ctx context.Context, arg CreateContactParams) (Contact, error)
 	CreateCustomer(ctx context.Context, arg CreateCustomerParams) (Customer, error)
+	CreateRedial(ctx context.Context, arg CreateRedialParams) (Redial, error)
+	CreateStaff(ctx context.Context, arg CreateStaffParams) (Staff, error)
+	CreateStatus(ctx context.Context, arg CreateStatusParams) (Status, error)
+	CreateUser(ctx context.Context, arg CreateUserParams) (User, error)
+	GetBook(ctx context.Context, id uuid.UUID) (Book, error)
+	GetCategory(ctx context.Context, id uuid.UUID) (Category, error)
+	GetContact(ctx context.Context, id uuid.UUID) (Contact, error)
+	GetRedial(ctx context.Context, id uuid.UUID) (Redial, error)
+	GetStaff(ctx context.Context, id uuid.UUID) (Staff, error)
+	GetStatus(ctx context.Context, id uuid.UUID) (Status, error)
+	GetUser(ctx context.Context, id uuid.UUID) (User, error)
 }
 
 var _ Querier = (*Queries)(nil)

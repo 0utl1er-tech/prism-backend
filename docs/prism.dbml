@@ -30,8 +30,6 @@ Table Customer {
   id uuid [pk]
   book_id uuid [not null]
   category_id uuid
-  contact_id uuid [not null, unique]
-  redial_id uuid [unique]
   name varchar [not null]
   corporation varchar
   address varchar
@@ -100,8 +98,6 @@ Ref: "Contact"."staff_id" - "Staff"."id"
 
 Ref: "Customer"."id" < "Contact"."customer_id"
 
-Ref: "Customer"."contact_id" - "Contact"."id"
-
-Ref: "Customer"."redial_id" < "Redial"."id"
-
 Ref: "User"."id" < "Redial"."user_id"
+
+Ref: "Customer"."id" - "Redial"."id"

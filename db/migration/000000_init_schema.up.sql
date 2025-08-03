@@ -1,6 +1,6 @@
 -- SQL dump generated using DBML (dbml.dbdiagram.io)
 -- Database: PostgreSQL
--- Generated at: 2025-08-03T10:26:16.931Z
+-- Generated at: 2025-08-03T11:28:32.192Z
 
 CREATE TYPE "role" AS ENUM (
   'owner',
@@ -32,8 +32,6 @@ CREATE TABLE "Customer" (
   "id" uuid PRIMARY KEY,
   "book_id" uuid NOT NULL,
   "category_id" uuid,
-  "contact_id" uuid UNIQUE NOT NULL,
-  "redial_id" uuid UNIQUE,
   "name" varchar NOT NULL,
   "corporation" varchar,
   "address" varchar,
@@ -112,8 +110,6 @@ ALTER TABLE "Staff" ADD FOREIGN KEY ("id") REFERENCES "Contact" ("staff_id");
 
 ALTER TABLE "Contact" ADD FOREIGN KEY ("customer_id") REFERENCES "Customer" ("id");
 
-ALTER TABLE "Contact" ADD FOREIGN KEY ("id") REFERENCES "Customer" ("contact_id");
-
-ALTER TABLE "Redial" ADD FOREIGN KEY ("id") REFERENCES "Customer" ("redial_id");
-
 ALTER TABLE "Redial" ADD FOREIGN KEY ("user_id") REFERENCES "User" ("id");
+
+ALTER TABLE "Redial" ADD FOREIGN KEY ("id") REFERENCES "Customer" ("id");

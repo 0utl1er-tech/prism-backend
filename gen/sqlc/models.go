@@ -91,8 +91,6 @@ type Customer struct {
 	ID          uuid.UUID   `json:"id"`
 	BookID      uuid.UUID   `json:"book_id"`
 	CategoryID  pgtype.UUID `json:"category_id"`
-	ContactID   uuid.UUID   `json:"contact_id"`
-	RedialID    pgtype.UUID `json:"redial_id"`
 	Name        string      `json:"name"`
 	Corporation pgtype.Text `json:"corporation"`
 	Address     pgtype.Text `json:"address"`

@@ -43,6 +43,16 @@ func (q *Queries) CreateStatus(ctx context.Context, arg CreateStatusParams) (Sta
 	return i, err
 }
 
+const deleteStatus = `-- name: DeleteStatus :exec
+DELETE FROM "Status"
+WHERE id = $1
+`
+
+func (q *Queries) DeleteStatus(ctx context.Context, id uuid.UUID) error {
+	_, err := q.db.Exec(ctx, deleteStatus, id)
+	return err
+}
+
 const getStatus = `-- name: GetStatus :one
 SELECT id, name, effective, ng, created_at FROM "Status"
 WHERE id = $1 LIMIT 1
@@ -50,6 +60,41 @@ WHERE id = $1 LIMIT 1
 
 func (q *Queries) GetStatus(ctx context.Context, id uuid.UUID) (Status, error) {
 	row := q.db.QueryRow(ctx, getStatus, id)
+	var i Status
+	err := row.Scan(
+		&i.ID,
+		&i.Name,
+		&i.Effective,
+		&i.Ng,
+		&i.CreatedAt,
+	)
+	return i, err
+}
+
+const updateStatus = `-- name: UpdateStatus :one
+UPDATE "Status"
+SET 
+  name = COALESCE($1, name),
+  effective = COALESCE($2, effective),
+  ng = COALESCE($3, ng)
+WHERE id = $4
+RETURNING id, name, effective, ng, created_at
+`
+
+type UpdateStatusParams struct {
+	Name      pgtype.Text `json:"name"`
+	Effective pgtype.Bool `json:"effective"`
+	Ng        pgtype.Bool `json:"ng"`
+	ID        uuid.UUID   `json:"id"`
+}
+
+func (q *Queries) UpdateStatus(ctx context.Context, arg UpdateStatusParams) (Status, error) {
+	row := q.db.QueryRow(ctx, updateStatus,
+		arg.Name,
+		arg.Effective,
+		arg.Ng,
+		arg.ID,
+	)
 	var i Status
 	err := row.Scan(
 		&i.ID,

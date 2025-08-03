@@ -19,6 +19,14 @@ type Querier interface {
 	CreateStaff(ctx context.Context, arg CreateStaffParams) (Staff, error)
 	CreateStatus(ctx context.Context, arg CreateStatusParams) (Status, error)
 	CreateUser(ctx context.Context, arg CreateUserParams) (User, error)
+	DeleteBook(ctx context.Context, id uuid.UUID) error
+	DeleteCategory(ctx context.Context, id uuid.UUID) error
+	DeleteContact(ctx context.Context, id uuid.UUID) error
+	DeleteCustomer(ctx context.Context, id uuid.UUID) error
+	DeleteRedial(ctx context.Context, id uuid.UUID) error
+	DeleteStaff(ctx context.Context, id uuid.UUID) error
+	DeleteStatus(ctx context.Context, id uuid.UUID) error
+	DeleteUser(ctx context.Context, id uuid.UUID) error
 	GetBook(ctx context.Context, id uuid.UUID) (Book, error)
 	GetCategory(ctx context.Context, id uuid.UUID) (Category, error)
 	GetContact(ctx context.Context, id uuid.UUID) (Contact, error)
@@ -26,6 +34,15 @@ type Querier interface {
 	GetStaff(ctx context.Context, id uuid.UUID) (Staff, error)
 	GetStatus(ctx context.Context, id uuid.UUID) (Status, error)
 	GetUser(ctx context.Context, id uuid.UUID) (User, error)
+	SearchCustomer(ctx context.Context, arg SearchCustomerParams) ([]Customer, error)
+	UpdateBook(ctx context.Context, arg UpdateBookParams) (Book, error)
+	UpdateCategory(ctx context.Context, arg UpdateCategoryParams) (Category, error)
+	UpdateContact(ctx context.Context, arg UpdateContactParams) (Contact, error)
+	UpdateCustomer(ctx context.Context, arg UpdateCustomerParams) (Customer, error)
+	UpdateRedial(ctx context.Context, arg UpdateRedialParams) (Redial, error)
+	UpdateStaff(ctx context.Context, arg UpdateStaffParams) (Staff, error)
+	UpdateStatus(ctx context.Context, arg UpdateStatusParams) (Status, error)
+	UpdateUser(ctx context.Context, arg UpdateUserParams) (User, error)
 }
 
 var _ Querier = (*Queries)(nil)

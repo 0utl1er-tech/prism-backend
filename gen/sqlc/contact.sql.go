@@ -49,6 +49,16 @@ func (q *Queries) CreateContact(ctx context.Context, arg CreateContactParams) (C
 	return i, err
 }
 
+const deleteContact = `-- name: DeleteContact :exec
+DELETE FROM "Contact"
+WHERE id = $1
+`
+
+func (q *Queries) DeleteContact(ctx context.Context, id uuid.UUID) error {
+	_, err := q.db.Exec(ctx, deleteContact, id)
+	return err
+}
+
 const getContact = `-- name: GetContact :one
 SELECT id, customer_id, staff_id, phone, mail, fax, created_at FROM "Contact"
 WHERE id = $1 LIMIT 1
@@ -56,6 +66,44 @@ WHERE id = $1 LIMIT 1
 
 func (q *Queries) GetContact(ctx context.Context, id uuid.UUID) (Contact, error) {
 	row := q.db.QueryRow(ctx, getContact, id)
+	var i Contact
+	err := row.Scan(
+		&i.ID,
+		&i.CustomerID,
+		&i.StaffID,
+		&i.Phone,
+		&i.Mail,
+		&i.Fax,
+		&i.CreatedAt,
+	)
+	return i, err
+}
+
+const updateContact = `-- name: UpdateContact :one
+UPDATE "Contact"
+SET 
+  phone = COALESCE($1, phone),
+  mail = COALESCE($2, mail),
+  fax = COALESCE($3, fax)
+WHERE 
+  id = $4
+RETURNING id, customer_id, staff_id, phone, mail, fax, created_at
+`
+
+type UpdateContactParams struct {
+	Phone pgtype.Text `json:"phone"`
+	Mail  pgtype.Text `json:"mail"`
+	Fax   pgtype.Text `json:"fax"`
+	ID    uuid.UUID   `json:"id"`
+}
+
+func (q *Queries) UpdateContact(ctx context.Context, arg UpdateContactParams) (Contact, error) {
+	row := q.db.QueryRow(ctx, updateContact,
+		arg.Phone,
+		arg.Mail,
+		arg.Fax,
+		arg.ID,
+	)
 	var i Contact
 	err := row.Scan(
 		&i.ID,

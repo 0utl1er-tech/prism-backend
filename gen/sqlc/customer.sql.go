@@ -57,3 +57,120 @@ func (q *Queries) CreateCustomer(ctx context.Context, arg CreateCustomerParams) 
 	)
 	return i, err
 }
+
+const deleteCustomer = `-- name: DeleteCustomer :exec
+DELETE FROM "Customer"
+WHERE id = $1
+`
+
+func (q *Queries) DeleteCustomer(ctx context.Context, id uuid.UUID) error {
+	_, err := q.db.Exec(ctx, deleteCustomer, id)
+	return err
+}
+
+const searchCustomer = `-- name: SearchCustomer :many
+SELECT id, book_id, category_id, name, corporation, address, leader, pic, memo, created_at FROM "Customer"
+WHERE book_id = COALESCE($1, book_id)
+AND name ILIKE '%' || COALESCE($2, name) || '%'
+AND corporation ILIKE '%' || COALESCE($3, corporation) || '%'
+AND address ILIKE '%' || COALESCE($4, address) || '%'
+AND leader = COALESCE($5, leader)
+AND pic = COALESCE($6, pic) 
+AND memo ILIKE '%' || COALESCE($7, memo) || '%'
+`
+
+type SearchCustomerParams struct {
+	BookID      pgtype.UUID `json:"book_id"`
+	Name        pgtype.Text `json:"name"`
+	Corporation pgtype.Text `json:"corporation"`
+	Address     pgtype.Text `json:"address"`
+	Leader      pgtype.UUID `json:"leader"`
+	Pic         pgtype.UUID `json:"pic"`
+	Memo        pgtype.Text `json:"memo"`
+}
+
+func (q *Queries) SearchCustomer(ctx context.Context, arg SearchCustomerParams) ([]Customer, error) {
+	rows, err := q.db.Query(ctx, searchCustomer,
+		arg.BookID,
+		arg.Name,
+		arg.Corporation,
+		arg.Address,
+		arg.Leader,
+		arg.Pic,
+		arg.Memo,
+	)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []Customer{}
+	for rows.Next() {
+		var i Customer
+		if err := rows.Scan(
+			&i.ID,
+			&i.BookID,
+			&i.CategoryID,
+			&i.Name,
+			&i.Corporation,
+			&i.Address,
+			&i.Leader,
+			&i.Pic,
+			&i.Memo,
+			&i.CreatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const updateCustomer = `-- name: UpdateCustomer :one
+UPDATE "Customer"
+SET 
+  name = COALESCE($1, name),
+  book_id = COALESCE($2, book_id),
+  corporation = COALESCE($3, corporation),
+  address = COALESCE($4, address),
+  memo = COALESCE($5, memo)
+WHERE
+  id = $6
+RETURNING id, book_id, category_id, name, corporation, address, leader, pic, memo, created_at
+`
+
+type UpdateCustomerParams struct {
+	Name        pgtype.Text `json:"name"`
+	BookID      pgtype.UUID `json:"book_id"`
+	Corporation pgtype.Text `json:"corporation"`
+	Address     pgtype.Text `json:"address"`
+	Memo        pgtype.Text `json:"memo"`
+	ID          uuid.UUID   `json:"id"`
+}
+
+func (q *Queries) UpdateCustomer(ctx context.Context, arg UpdateCustomerParams) (Customer, error) {
+	row := q.db.QueryRow(ctx, updateCustomer,
+		arg.Name,
+		arg.BookID,
+		arg.Corporation,
+		arg.Address,
+		arg.Memo,
+		arg.ID,
+	)
+	var i Customer
+	err := row.Scan(
+		&i.ID,
+		&i.BookID,
+		&i.CategoryID,
+		&i.Name,
+		&i.Corporation,
+		&i.Address,
+		&i.Leader,
+		&i.Pic,
+		&i.Memo,
+		&i.CreatedAt,
+	)
+	return i, err
+}

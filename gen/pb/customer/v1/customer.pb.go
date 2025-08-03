@@ -125,6 +125,202 @@ func (x *CreateCustomerResponse) GetId() string {
 	return ""
 }
 
+type GetCustomerRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	BookId        string                 `protobuf:"bytes,1,opt,name=book_id,json=bookId,proto3" json:"book_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetCustomerRequest) Reset() {
+	*x = GetCustomerRequest{}
+	mi := &file_customer_v1_customer_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetCustomerRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetCustomerRequest) ProtoMessage() {}
+
+func (x *GetCustomerRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_customer_v1_customer_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetCustomerRequest.ProtoReflect.Descriptor instead.
+func (*GetCustomerRequest) Descriptor() ([]byte, []int) {
+	return file_customer_v1_customer_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *GetCustomerRequest) GetBookId() string {
+	if x != nil {
+		return x.BookId
+	}
+	return ""
+}
+
+type GetCustomerResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Customers     []*Customer            `protobuf:"bytes,1,rep,name=customers,proto3" json:"customers,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetCustomerResponse) Reset() {
+	*x = GetCustomerResponse{}
+	mi := &file_customer_v1_customer_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetCustomerResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetCustomerResponse) ProtoMessage() {}
+
+func (x *GetCustomerResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_customer_v1_customer_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetCustomerResponse.ProtoReflect.Descriptor instead.
+func (*GetCustomerResponse) Descriptor() ([]byte, []int) {
+	return file_customer_v1_customer_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *GetCustomerResponse) GetCustomers() []*Customer {
+	if x != nil {
+		return x.Customers
+	}
+	return nil
+}
+
+type Customer struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Corporation   string                 `protobuf:"bytes,3,opt,name=corporation,proto3" json:"corporation,omitempty"`
+	Address       string                 `protobuf:"bytes,4,opt,name=address,proto3" json:"address,omitempty"`
+	Leader        string                 `protobuf:"bytes,5,opt,name=leader,proto3" json:"leader,omitempty"`
+	LeaderSex     string                 `protobuf:"bytes,6,opt,name=leader_sex,json=leaderSex,proto3" json:"leader_sex,omitempty"`
+	Pic           string                 `protobuf:"bytes,7,opt,name=pic,proto3" json:"pic,omitempty"`
+	PicSex        string                 `protobuf:"bytes,8,opt,name=pic_sex,json=picSex,proto3" json:"pic_sex,omitempty"`
+	Memo          string                 `protobuf:"bytes,9,opt,name=memo,proto3" json:"memo,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Customer) Reset() {
+	*x = Customer{}
+	mi := &file_customer_v1_customer_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Customer) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Customer) ProtoMessage() {}
+
+func (x *Customer) ProtoReflect() protoreflect.Message {
+	mi := &file_customer_v1_customer_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Customer.ProtoReflect.Descriptor instead.
+func (*Customer) Descriptor() ([]byte, []int) {
+	return file_customer_v1_customer_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *Customer) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *Customer) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *Customer) GetCorporation() string {
+	if x != nil {
+		return x.Corporation
+	}
+	return ""
+}
+
+func (x *Customer) GetAddress() string {
+	if x != nil {
+		return x.Address
+	}
+	return ""
+}
+
+func (x *Customer) GetLeader() string {
+	if x != nil {
+		return x.Leader
+	}
+	return ""
+}
+
+func (x *Customer) GetLeaderSex() string {
+	if x != nil {
+		return x.LeaderSex
+	}
+	return ""
+}
+
+func (x *Customer) GetPic() string {
+	if x != nil {
+		return x.Pic
+	}
+	return ""
+}
+
+func (x *Customer) GetPicSex() string {
+	if x != nil {
+		return x.PicSex
+	}
+	return ""
+}
+
+func (x *Customer) GetMemo() string {
+	if x != nil {
+		return x.Memo
+	}
+	return ""
+}
+
 var File_customer_v1_customer_proto protoreflect.FileDescriptor
 
 const file_customer_v1_customer_proto_rawDesc = "" +
@@ -135,7 +331,22 @@ const file_customer_v1_customer_proto_rawDesc = "" +
 	"\x05email\x18\x02 \x01(\tR\x05email\x12\x14\n" +
 	"\x05phone\x18\x03 \x01(\tR\x05phone\"(\n" +
 	"\x16CreateCustomerResponse\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id2l\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\"-\n" +
+	"\x12GetCustomerRequest\x12\x17\n" +
+	"\abook_id\x18\x01 \x01(\tR\x06bookId\"J\n" +
+	"\x13GetCustomerResponse\x123\n" +
+	"\tcustomers\x18\x01 \x03(\v2\x15.customer.v1.CustomerR\tcustomers\"\xe0\x01\n" +
+	"\bCustomer\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
+	"\x04name\x18\x02 \x01(\tR\x04name\x12 \n" +
+	"\vcorporation\x18\x03 \x01(\tR\vcorporation\x12\x18\n" +
+	"\aaddress\x18\x04 \x01(\tR\aaddress\x12\x16\n" +
+	"\x06leader\x18\x05 \x01(\tR\x06leader\x12\x1d\n" +
+	"\n" +
+	"leader_sex\x18\x06 \x01(\tR\tleaderSex\x12\x10\n" +
+	"\x03pic\x18\a \x01(\tR\x03pic\x12\x17\n" +
+	"\apic_sex\x18\b \x01(\tR\x06picSex\x12\x12\n" +
+	"\x04memo\x18\t \x01(\tR\x04memo2l\n" +
 	"\x0fCustomerService\x12Y\n" +
 	"\x0eCreateCustomer\x12\".customer.v1.CreateCustomerRequest\x1a#.customer.v1.CreateCustomerResponseB\xb2\x01\n" +
 	"\x0fcom.customer.v1B\rCustomerProtoP\x01ZCgithub.com/0utl1er-tech/prism-backend/gen/pb/customer/v1;customerv1\xa2\x02\x03CXX\xaa\x02\vCustomer.V1\xca\x02\vCustomer\\V1\xe2\x02\x17Customer\\V1\\GPBMetadata\xea\x02\fCustomer::V1b\x06proto3"
@@ -152,19 +363,23 @@ func file_customer_v1_customer_proto_rawDescGZIP() []byte {
 	return file_customer_v1_customer_proto_rawDescData
 }
 
-var file_customer_v1_customer_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_customer_v1_customer_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
 var file_customer_v1_customer_proto_goTypes = []any{
 	(*CreateCustomerRequest)(nil),  // 0: customer.v1.CreateCustomerRequest
 	(*CreateCustomerResponse)(nil), // 1: customer.v1.CreateCustomerResponse
+	(*GetCustomerRequest)(nil),     // 2: customer.v1.GetCustomerRequest
+	(*GetCustomerResponse)(nil),    // 3: customer.v1.GetCustomerResponse
+	(*Customer)(nil),               // 4: customer.v1.Customer
 }
 var file_customer_v1_customer_proto_depIdxs = []int32{
-	0, // 0: customer.v1.CustomerService.CreateCustomer:input_type -> customer.v1.CreateCustomerRequest
-	1, // 1: customer.v1.CustomerService.CreateCustomer:output_type -> customer.v1.CreateCustomerResponse
-	1, // [1:2] is the sub-list for method output_type
-	0, // [0:1] is the sub-list for method input_type
-	0, // [0:0] is the sub-list for extension type_name
-	0, // [0:0] is the sub-list for extension extendee
-	0, // [0:0] is the sub-list for field type_name
+	4, // 0: customer.v1.GetCustomerResponse.customers:type_name -> customer.v1.Customer
+	0, // 1: customer.v1.CustomerService.CreateCustomer:input_type -> customer.v1.CreateCustomerRequest
+	1, // 2: customer.v1.CustomerService.CreateCustomer:output_type -> customer.v1.CreateCustomerResponse
+	2, // [2:3] is the sub-list for method output_type
+	1, // [1:2] is the sub-list for method input_type
+	1, // [1:1] is the sub-list for extension type_name
+	1, // [1:1] is the sub-list for extension extendee
+	0, // [0:1] is the sub-list for field type_name
 }
 
 func init() { file_customer_v1_customer_proto_init() }
@@ -178,7 +393,7 @@ func file_customer_v1_customer_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_customer_v1_customer_proto_rawDesc), len(file_customer_v1_customer_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   2,
+			NumMessages:   5,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

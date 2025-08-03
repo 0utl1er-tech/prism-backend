@@ -9,6 +9,7 @@ import (
 	"context"
 
 	"github.com/google/uuid"
+	"github.com/jackc/pgx/v5/pgtype"
 )
 
 const createUser = `-- name: CreateUser :one
@@ -42,6 +43,16 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, e
 	return i, err
 }
 
+const deleteUser = `-- name: DeleteUser :exec
+DELETE FROM "User"
+WHERE id = $1
+`
+
+func (q *Queries) DeleteUser(ctx context.Context, id uuid.UUID) error {
+	_, err := q.db.Exec(ctx, deleteUser, id)
+	return err
+}
+
 const getUser = `-- name: GetUser :one
 SELECT id, email, name, role, created_at FROM "User"
 WHERE id = $1 LIMIT 1
@@ -49,6 +60,41 @@ WHERE id = $1 LIMIT 1
 
 func (q *Queries) GetUser(ctx context.Context, id uuid.UUID) (User, error) {
 	row := q.db.QueryRow(ctx, getUser, id)
+	var i User
+	err := row.Scan(
+		&i.ID,
+		&i.Email,
+		&i.Name,
+		&i.Role,
+		&i.CreatedAt,
+	)
+	return i, err
+}
+
+const updateUser = `-- name: UpdateUser :one
+UPDATE "User"
+SET 
+  email = COALESCE($1, email),
+  name = COALESCE($2, name),
+  role = COALESCE($3, role)
+WHERE id = $4
+RETURNING id, email, name, role, created_at
+`
+
+type UpdateUserParams struct {
+	Email pgtype.Text `json:"email"`
+	Name  pgtype.Text `json:"name"`
+	Role  NullRole    `json:"role"`
+	ID    uuid.UUID   `json:"id"`
+}
+
+func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) (User, error) {
+	row := q.db.QueryRow(ctx, updateUser,
+		arg.Email,
+		arg.Name,
+		arg.Role,
+		arg.ID,
+	)
 	var i User
 	err := row.Scan(
 		&i.ID,

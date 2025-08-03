@@ -9,6 +9,7 @@ import (
 	"context"
 
 	"github.com/google/uuid"
+	"github.com/jackc/pgx/v5/pgtype"
 )
 
 const createCategory = `-- name: CreateCategory :one
@@ -29,6 +30,16 @@ func (q *Queries) CreateCategory(ctx context.Context, arg CreateCategoryParams) 
 	return i, err
 }
 
+const deleteCategory = `-- name: DeleteCategory :exec
+DELETE FROM "Category"
+WHERE id = $1
+`
+
+func (q *Queries) DeleteCategory(ctx context.Context, id uuid.UUID) error {
+	_, err := q.db.Exec(ctx, deleteCategory, id)
+	return err
+}
+
 const getCategory = `-- name: GetCategory :one
 SELECT id, name, created_at FROM "Category"
 WHERE id = $1 LIMIT 1
@@ -36,6 +47,26 @@ WHERE id = $1 LIMIT 1
 
 func (q *Queries) GetCategory(ctx context.Context, id uuid.UUID) (Category, error) {
 	row := q.db.QueryRow(ctx, getCategory, id)
+	var i Category
+	err := row.Scan(&i.ID, &i.Name, &i.CreatedAt)
+	return i, err
+}
+
+const updateCategory = `-- name: UpdateCategory :one
+UPDATE "Category"
+SET 
+  name = COALESCE($1, name)
+WHERE id = $2
+RETURNING id, name, created_at
+`
+
+type UpdateCategoryParams struct {
+	Name pgtype.Text `json:"name"`
+	ID   uuid.UUID   `json:"id"`
+}
+
+func (q *Queries) UpdateCategory(ctx context.Context, arg UpdateCategoryParams) (Category, error) {
+	row := q.db.QueryRow(ctx, updateCategory, arg.Name, arg.ID)
 	var i Category
 	err := row.Scan(&i.ID, &i.Name, &i.CreatedAt)
 	return i, err

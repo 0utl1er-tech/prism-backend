@@ -23,6 +23,7 @@ const (
 
 type CreateBookRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
+	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -55,6 +56,13 @@ func (x *CreateBookRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use CreateBookRequest.ProtoReflect.Descriptor instead.
 func (*CreateBookRequest) Descriptor() ([]byte, []int) {
 	return file_book_v1_book_proto_rawDescGZIP(), []int{0}
+}
+
+func (x *CreateBookRequest) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
 }
 
 type CreateBookResponse struct {
@@ -93,16 +101,119 @@ func (*CreateBookResponse) Descriptor() ([]byte, []int) {
 	return file_book_v1_book_proto_rawDescGZIP(), []int{1}
 }
 
+type GetBookRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetBookRequest) Reset() {
+	*x = GetBookRequest{}
+	mi := &file_book_v1_book_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetBookRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetBookRequest) ProtoMessage() {}
+
+func (x *GetBookRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_book_v1_book_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetBookRequest.ProtoReflect.Descriptor instead.
+func (*GetBookRequest) Descriptor() ([]byte, []int) {
+	return file_book_v1_book_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *GetBookRequest) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+type GetBookResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetBookResponse) Reset() {
+	*x = GetBookResponse{}
+	mi := &file_book_v1_book_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetBookResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetBookResponse) ProtoMessage() {}
+
+func (x *GetBookResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_book_v1_book_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetBookResponse.ProtoReflect.Descriptor instead.
+func (*GetBookResponse) Descriptor() ([]byte, []int) {
+	return file_book_v1_book_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *GetBookResponse) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *GetBookResponse) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
 var File_book_v1_book_proto protoreflect.FileDescriptor
 
 const file_book_v1_book_proto_rawDesc = "" +
 	"\n" +
-	"\x12book/v1/book.proto\x12\abook.v1\"\x13\n" +
-	"\x11CreateBookRequest\"\x14\n" +
-	"\x12CreateBookResponse2T\n" +
+	"\x12book/v1/book.proto\x12\abook.v1\"'\n" +
+	"\x11CreateBookRequest\x12\x12\n" +
+	"\x04name\x18\x01 \x01(\tR\x04name\"\x14\n" +
+	"\x12CreateBookResponse\" \n" +
+	"\x0eGetBookRequest\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\"5\n" +
+	"\x0fGetBookResponse\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
+	"\x04name\x18\x02 \x01(\tR\x04name2\x92\x01\n" +
 	"\vBookService\x12E\n" +
 	"\n" +
-	"CreateBook\x12\x1a.book.v1.CreateBookRequest\x1a\x1b.book.v1.CreateBookResponseB\x92\x01\n" +
+	"CreateBook\x12\x1a.book.v1.CreateBookRequest\x1a\x1b.book.v1.CreateBookResponse\x12<\n" +
+	"\aGetBook\x12\x17.book.v1.GetBookRequest\x1a\x18.book.v1.GetBookResponseB\x92\x01\n" +
 	"\vcom.book.v1B\tBookProtoP\x01Z;github.com/0utl1er-tech/prism-backend/gen/pb/book/v1;bookv1\xa2\x02\x03BXX\xaa\x02\aBook.V1\xca\x02\aBook\\V1\xe2\x02\x13Book\\V1\\GPBMetadata\xea\x02\bBook::V1b\x06proto3"
 
 var (
@@ -117,16 +228,20 @@ func file_book_v1_book_proto_rawDescGZIP() []byte {
 	return file_book_v1_book_proto_rawDescData
 }
 
-var file_book_v1_book_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_book_v1_book_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_book_v1_book_proto_goTypes = []any{
 	(*CreateBookRequest)(nil),  // 0: book.v1.CreateBookRequest
 	(*CreateBookResponse)(nil), // 1: book.v1.CreateBookResponse
+	(*GetBookRequest)(nil),     // 2: book.v1.GetBookRequest
+	(*GetBookResponse)(nil),    // 3: book.v1.GetBookResponse
 }
 var file_book_v1_book_proto_depIdxs = []int32{
 	0, // 0: book.v1.BookService.CreateBook:input_type -> book.v1.CreateBookRequest
-	1, // 1: book.v1.BookService.CreateBook:output_type -> book.v1.CreateBookResponse
-	1, // [1:2] is the sub-list for method output_type
-	0, // [0:1] is the sub-list for method input_type
+	2, // 1: book.v1.BookService.GetBook:input_type -> book.v1.GetBookRequest
+	1, // 2: book.v1.BookService.CreateBook:output_type -> book.v1.CreateBookResponse
+	3, // 3: book.v1.BookService.GetBook:output_type -> book.v1.GetBookResponse
+	2, // [2:4] is the sub-list for method output_type
+	0, // [0:2] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name
@@ -143,7 +258,7 @@ func file_book_v1_book_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_book_v1_book_proto_rawDesc), len(file_book_v1_book_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   2,
+			NumMessages:   4,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

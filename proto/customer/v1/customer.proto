@@ -17,3 +17,29 @@ message CreateCustomerRequest {
 message CreateCustomerResponse {
   string id = 1;
 }
+
+message GetCustomerRequest {
+  string book_id = 1;
+  string name = 2;
+  string corporation = 3;
+  string address = 4;
+  string leader = 5;
+  string pic = 6;
+  string memo = 7;
+}
+
+message GetCustomerResponse {
+  repeated Customer customers = 1;
+}
+
+message Customer {
+  string id = 1;
+  string name = 2;
+  string corporation = 3;
+  string address = 4;
+  string leader = 5;
+  string leader_sex = 6;
+  string pic = 7;
+  string pic_sex = 8;
+  string memo = 9;
+}

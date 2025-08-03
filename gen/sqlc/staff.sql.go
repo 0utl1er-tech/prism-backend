@@ -36,6 +36,16 @@ func (q *Queries) CreateStaff(ctx context.Context, arg CreateStaffParams) (Staff
 	return i, err
 }
 
+const deleteStaff = `-- name: DeleteStaff :exec
+DELETE FROM "Staff"
+WHERE id = $1
+`
+
+func (q *Queries) DeleteStaff(ctx context.Context, id uuid.UUID) error {
+	_, err := q.db.Exec(ctx, deleteStaff, id)
+	return err
+}
+
 const getStaff = `-- name: GetStaff :one
 SELECT id, name, sex, created_at FROM "Staff"
 WHERE id = $1 LIMIT 1
@@ -43,6 +53,33 @@ WHERE id = $1 LIMIT 1
 
 func (q *Queries) GetStaff(ctx context.Context, id uuid.UUID) (Staff, error) {
 	row := q.db.QueryRow(ctx, getStaff, id)
+	var i Staff
+	err := row.Scan(
+		&i.ID,
+		&i.Name,
+		&i.Sex,
+		&i.CreatedAt,
+	)
+	return i, err
+}
+
+const updateStaff = `-- name: UpdateStaff :one
+UPDATE "Staff"
+SET 
+  name = COALESCE($1, name),
+  sex = COALESCE($2, sex)
+WHERE id = $3
+RETURNING id, name, sex, created_at
+`
+
+type UpdateStaffParams struct {
+	Name pgtype.Text `json:"name"`
+	Sex  pgtype.Text `json:"sex"`
+	ID   uuid.UUID   `json:"id"`
+}
+
+func (q *Queries) UpdateStaff(ctx context.Context, arg UpdateStaffParams) (Staff, error) {
+	row := q.db.QueryRow(ctx, updateStaff, arg.Name, arg.Sex, arg.ID)
 	var i Staff
 	err := row.Scan(
 		&i.ID,

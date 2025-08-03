@@ -9,6 +9,7 @@ import (
 	"context"
 
 	"github.com/google/uuid"
+	"github.com/jackc/pgx/v5/pgtype"
 )
 
 const createBook = `-- name: CreateBook :one
@@ -29,6 +30,16 @@ func (q *Queries) CreateBook(ctx context.Context, arg CreateBookParams) (Book, e
 	return i, err
 }
 
+const deleteBook = `-- name: DeleteBook :exec
+DELETE FROM "Book"
+WHERE id = $1
+`
+
+func (q *Queries) DeleteBook(ctx context.Context, id uuid.UUID) error {
+	_, err := q.db.Exec(ctx, deleteBook, id)
+	return err
+}
+
 const getBook = `-- name: GetBook :one
 SELECT id, name, created_at FROM "Book"
 WHERE id = $1 LIMIT 1
@@ -36,6 +47,26 @@ WHERE id = $1 LIMIT 1
 
 func (q *Queries) GetBook(ctx context.Context, id uuid.UUID) (Book, error) {
 	row := q.db.QueryRow(ctx, getBook, id)
+	var i Book
+	err := row.Scan(&i.ID, &i.Name, &i.CreatedAt)
+	return i, err
+}
+
+const updateBook = `-- name: UpdateBook :one
+UPDATE "Book"
+SET 
+  name = COALESCE($1, name)
+WHERE id = $2
+RETURNING id, name, created_at
+`
+
+type UpdateBookParams struct {
+	Name pgtype.Text `json:"name"`
+	ID   uuid.UUID   `json:"id"`
+}
+
+func (q *Queries) UpdateBook(ctx context.Context, arg UpdateBookParams) (Book, error) {
+	row := q.db.QueryRow(ctx, updateBook, arg.Name, arg.ID)
 	var i Book
 	err := row.Scan(&i.ID, &i.Name, &i.CreatedAt)
 	return i, err

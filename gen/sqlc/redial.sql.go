@@ -43,6 +43,16 @@ func (q *Queries) CreateRedial(ctx context.Context, arg CreateRedialParams) (Red
 	return i, err
 }
 
+const deleteRedial = `-- name: DeleteRedial :exec
+DELETE FROM "Redial"
+WHERE id = $1
+`
+
+func (q *Queries) DeleteRedial(ctx context.Context, id uuid.UUID) error {
+	_, err := q.db.Exec(ctx, deleteRedial, id)
+	return err
+}
+
 const getRedial = `-- name: GetRedial :one
 SELECT id, user_id, date, time, created_at FROM "Redial"
 WHERE id = $1 LIMIT 1
@@ -50,6 +60,41 @@ WHERE id = $1 LIMIT 1
 
 func (q *Queries) GetRedial(ctx context.Context, id uuid.UUID) (Redial, error) {
 	row := q.db.QueryRow(ctx, getRedial, id)
+	var i Redial
+	err := row.Scan(
+		&i.ID,
+		&i.UserID,
+		&i.Date,
+		&i.Time,
+		&i.CreatedAt,
+	)
+	return i, err
+}
+
+const updateRedial = `-- name: UpdateRedial :one
+UPDATE "Redial"
+SET 
+  user_id = COALESCE($1, user_id),
+  date = COALESCE($2, date),
+  time = COALESCE($3, time)
+WHERE id = $4
+RETURNING id, user_id, date, time, created_at
+`
+
+type UpdateRedialParams struct {
+	UserID pgtype.UUID `json:"user_id"`
+	Date   pgtype.Date `json:"date"`
+	Time   pgtype.Time `json:"time"`
+	ID     uuid.UUID   `json:"id"`
+}
+
+func (q *Queries) UpdateRedial(ctx context.Context, arg UpdateRedialParams) (Redial, error) {
+	row := q.db.QueryRow(ctx, updateRedial,
+		arg.UserID,
+		arg.Date,
+		arg.Time,
+		arg.ID,
+	)
 	var i Redial
 	err := row.Scan(
 		&i.ID,

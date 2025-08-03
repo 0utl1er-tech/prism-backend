@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "book/v1/book.proto",
+    "title": "book/v1/service.proto",
     "version": "version not set"
   },
   "tags": [
@@ -21,8 +21,111 @@
   "produces": [
     "application/json"
   ],
-  "paths": {},
+  "paths": {
+    "/v1/book/{id}": {
+      "get": {
+        "operationId": "BookService_GetBook",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GetBookResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "BookService"
+        ]
+      },
+      "delete": {
+        "operationId": "BookService_DeleteBook",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1DeleteBookResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "BookService"
+        ]
+      },
+      "put": {
+        "operationId": "BookService_UpdateBook",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1UpdateBookResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/BookServiceUpdateBookBody"
+            }
+          }
+        ],
+        "tags": [
+          "BookService"
+        ]
+      }
+    }
+  },
   "definitions": {
+    "BookServiceUpdateBookBody": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      }
+    },
     "protobufAny": {
       "type": "object",
       "properties": {
@@ -51,8 +154,16 @@
         }
       }
     },
-    "v1CreateBookResponse": {
-      "type": "object"
+    "v1Book": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
     },
     "v1CreateContactResponse": {
       "type": "object",
@@ -70,7 +181,22 @@
         }
       }
     },
+    "v1DeleteBookResponse": {
+      "type": "object"
+    },
     "v1GetBookResponse": {
+      "type": "object",
+      "properties": {
+        "books": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Book"
+          }
+        }
+      }
+    },
+    "v1UpdateBookResponse": {
       "type": "object",
       "properties": {
         "id": {

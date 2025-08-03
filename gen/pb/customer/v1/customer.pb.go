@@ -128,6 +128,12 @@ func (x *CreateCustomerResponse) GetId() string {
 type GetCustomerRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	BookId        string                 `protobuf:"bytes,1,opt,name=book_id,json=bookId,proto3" json:"book_id,omitempty"`
+	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Corporation   string                 `protobuf:"bytes,3,opt,name=corporation,proto3" json:"corporation,omitempty"`
+	Address       string                 `protobuf:"bytes,4,opt,name=address,proto3" json:"address,omitempty"`
+	Leader        string                 `protobuf:"bytes,5,opt,name=leader,proto3" json:"leader,omitempty"`
+	Pic           string                 `protobuf:"bytes,6,opt,name=pic,proto3" json:"pic,omitempty"`
+	Memo          string                 `protobuf:"bytes,7,opt,name=memo,proto3" json:"memo,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -165,6 +171,48 @@ func (*GetCustomerRequest) Descriptor() ([]byte, []int) {
 func (x *GetCustomerRequest) GetBookId() string {
 	if x != nil {
 		return x.BookId
+	}
+	return ""
+}
+
+func (x *GetCustomerRequest) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *GetCustomerRequest) GetCorporation() string {
+	if x != nil {
+		return x.Corporation
+	}
+	return ""
+}
+
+func (x *GetCustomerRequest) GetAddress() string {
+	if x != nil {
+		return x.Address
+	}
+	return ""
+}
+
+func (x *GetCustomerRequest) GetLeader() string {
+	if x != nil {
+		return x.Leader
+	}
+	return ""
+}
+
+func (x *GetCustomerRequest) GetPic() string {
+	if x != nil {
+		return x.Pic
+	}
+	return ""
+}
+
+func (x *GetCustomerRequest) GetMemo() string {
+	if x != nil {
+		return x.Memo
 	}
 	return ""
 }
@@ -331,9 +379,15 @@ const file_customer_v1_customer_proto_rawDesc = "" +
 	"\x05email\x18\x02 \x01(\tR\x05email\x12\x14\n" +
 	"\x05phone\x18\x03 \x01(\tR\x05phone\"(\n" +
 	"\x16CreateCustomerResponse\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\"-\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\"\xbb\x01\n" +
 	"\x12GetCustomerRequest\x12\x17\n" +
-	"\abook_id\x18\x01 \x01(\tR\x06bookId\"J\n" +
+	"\abook_id\x18\x01 \x01(\tR\x06bookId\x12\x12\n" +
+	"\x04name\x18\x02 \x01(\tR\x04name\x12 \n" +
+	"\vcorporation\x18\x03 \x01(\tR\vcorporation\x12\x18\n" +
+	"\aaddress\x18\x04 \x01(\tR\aaddress\x12\x16\n" +
+	"\x06leader\x18\x05 \x01(\tR\x06leader\x12\x10\n" +
+	"\x03pic\x18\x06 \x01(\tR\x03pic\x12\x12\n" +
+	"\x04memo\x18\a \x01(\tR\x04memo\"J\n" +
 	"\x13GetCustomerResponse\x123\n" +
 	"\tcustomers\x18\x01 \x03(\v2\x15.customer.v1.CustomerR\tcustomers\"\xe0\x01\n" +
 	"\bCustomer\x12\x0e\n" +

@@ -4,3 +4,4 @@ modules:
     name: buf.build/0utl1er-tech/prism-backend
 deps:
   - buf.build/googleapis/googleapis
+  - buf.build/grpc-ecosystem/grpc-gateway

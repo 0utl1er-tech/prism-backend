@@ -1,0 +1,51 @@
+syntax = "proto3";
+
+package book.v1;
+
+import "google/api/annotations.proto";
+
+option go_package = "github.com/0utl1er-tech/prism-backend/gen/pb/book/v1;bookv1";
+
+service BookService {
+  rpc GetBook(GetBookRequest) returns (GetBookResponse) {
+    option (google.api.http) = {get: "/v1/book/{id}"};
+  }
+  rpc UpdateBook(UpdateBookRequest) returns (UpdateBookResponse) {
+    option (google.api.http) = {
+      put: "/v1/book/{id}"
+      body: "*"
+    };
+  }
+  rpc DeleteBook(DeleteBookRequest) returns (DeleteBookResponse) {
+    option (google.api.http) = {delete: "/v1/book/{id}"};
+  }
+}
+
+message UpdateBookRequest {
+  string id = 1;
+  optional string name = 2;
+}
+
+message UpdateBookResponse {
+  string id = 1;
+  string name = 2;
+}
+
+message GetBookRequest {
+  string id = 1;
+}
+
+message GetBookResponse {
+  repeated Book books = 1;
+}
+
+message DeleteBookRequest {
+  string id = 1;
+}
+
+message DeleteBookResponse {}
+
+message Book {
+  string id = 1;
+  string name = 2;
+}

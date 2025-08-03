@@ -13,43 +13,48 @@ import (
 )
 
 const createCustomer = `-- name: CreateCustomer :one
-INSERT INTO "Customer" (id, book_id, name, phone, mobile, address, ai_report, user_report)
-VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-RETURNING id, book_id, name, phone, mobile, address, ai_report, user_report, created_at
+INSERT INTO "Customer" (id, book_id, category_id, name, corporation, address, leader, pic, memo)
+VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+RETURNING id, book_id, category_id, contact_id, redial_id, name, corporation, address, leader, pic, memo, created_at
 `
 
 type CreateCustomerParams struct {
-	ID         uuid.UUID   `json:"id"`
-	BookID     uuid.UUID   `json:"book_id"`
-	Name       pgtype.Text `json:"name"`
-	Phone      pgtype.Text `json:"phone"`
-	Mobile     pgtype.Text `json:"mobile"`
-	Address    pgtype.Text `json:"address"`
-	AiReport   pgtype.Text `json:"ai_report"`
-	UserReport pgtype.Text `json:"user_report"`
+	ID          uuid.UUID   `json:"id"`
+	BookID      uuid.UUID   `json:"book_id"`
+	CategoryID  pgtype.UUID `json:"category_id"`
+	Name        string      `json:"name"`
+	Corporation pgtype.Text `json:"corporation"`
+	Address     pgtype.Text `json:"address"`
+	Leader      pgtype.UUID `json:"leader"`
+	Pic         pgtype.UUID `json:"pic"`
+	Memo        pgtype.Text `json:"memo"`
 }
 
 func (q *Queries) CreateCustomer(ctx context.Context, arg CreateCustomerParams) (Customer, error) {
 	row := q.db.QueryRow(ctx, createCustomer,
 		arg.ID,
 		arg.BookID,
+		arg.CategoryID,
 		arg.Name,
-		arg.Phone,
-		arg.Mobile,
+		arg.Corporation,
 		arg.Address,
-		arg.AiReport,
-		arg.UserReport,
+		arg.Leader,
+		arg.Pic,
+		arg.Memo,
 	)
 	var i Customer
 	err := row.Scan(
 		&i.ID,
 		&i.BookID,
+		&i.CategoryID,
+		&i.ContactID,
+		&i.RedialID,
 		&i.Name,
-		&i.Phone,
-		&i.Mobile,
+		&i.Corporation,
 		&i.Address,
-		&i.AiReport,
-		&i.UserReport,
+		&i.Leader,
+		&i.Pic,
+		&i.Memo,
 		&i.CreatedAt,
 	)
 	return i, err

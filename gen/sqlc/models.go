@@ -5,11 +5,56 @@
 package db
 
 import (
+	"database/sql/driver"
+	"fmt"
 	"time"
 
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgtype"
 )
+
+type Role string
+
+const (
+	RoleOwner  Role = "owner"
+	RoleEditor Role = "editor"
+	RoleViewer Role = "viewer"
+)
+
+func (e *Role) Scan(src interface{}) error {
+	switch s := src.(type) {
+	case []byte:
+		*e = Role(s)
+	case string:
+		*e = Role(s)
+	default:
+		return fmt.Errorf("unsupported scan type for Role: %T", src)
+	}
+	return nil
+}
+
+type NullRole struct {
+	Role  Role `json:"role"`
+	Valid bool `json:"valid"` // Valid is true if Role is not NULL
+}
+
+// Scan implements the Scanner interface.
+func (ns *NullRole) Scan(value interface{}) error {
+	if value == nil {
+		ns.Role, ns.Valid = "", false
+		return nil
+	}
+	ns.Valid = true
+	return ns.Role.Scan(value)
+}
+
+// Value implements the driver Valuer interface.
+func (ns NullRole) Value() (driver.Value, error) {
+	if !ns.Valid {
+		return nil, nil
+	}
+	return string(ns.Role), nil
+}
 
 type Book struct {
 	ID        uuid.UUID `json:"id"`
@@ -18,55 +63,76 @@ type Book struct {
 }
 
 type Call struct {
+	ID         uuid.UUID   `json:"id"`
+	CustomerID uuid.UUID   `json:"customer_id"`
+	UserID     uuid.UUID   `json:"user_id"`
+	StatusID   pgtype.UUID `json:"status_id"`
+	CreatedAt  time.Time   `json:"created_at"`
+}
+
+type Category struct {
 	ID        uuid.UUID `json:"id"`
-	UserID    uuid.UUID `json:"user_id"`
+	Name      string    `json:"name"`
 	CreatedAt time.Time `json:"created_at"`
 }
 
 type Contact struct {
-	ID        uuid.UUID   `json:"id"`
-	Phone     pgtype.Text `json:"phone"`
-	Mobile    pgtype.Text `json:"mobile"`
-	Email     pgtype.Text `json:"email"`
+	ID         uuid.UUID `json:"id"`
+	CustomerID uuid.UUID `json:"customer_id"`
+	// これがnullの場合代表
+	StaffID   pgtype.UUID `json:"staff_id"`
+	Phone     string      `json:"phone"`
+	Mail      pgtype.Text `json:"mail"`
+	Fax       pgtype.Text `json:"fax"`
 	CreatedAt time.Time   `json:"created_at"`
 }
 
 type Customer struct {
-	ID       uuid.UUID   `json:"id"`
-	BookID   uuid.UUID   `json:"book_id"`
-	Name     pgtype.Text `json:"name"`
-	Phone    pgtype.Text `json:"phone"`
-	Mobile   pgtype.Text `json:"mobile"`
-	Address  pgtype.Text `json:"address"`
-	AiReport pgtype.Text `json:"ai_report"`
-	// ユーザーによるチューニング
-	UserReport pgtype.Text `json:"user_report"`
-	CreatedAt  time.Time   `json:"created_at"`
+	ID          uuid.UUID   `json:"id"`
+	BookID      uuid.UUID   `json:"book_id"`
+	CategoryID  pgtype.UUID `json:"category_id"`
+	ContactID   uuid.UUID   `json:"contact_id"`
+	RedialID    pgtype.UUID `json:"redial_id"`
+	Name        string      `json:"name"`
+	Corporation pgtype.Text `json:"corporation"`
+	Address     pgtype.Text `json:"address"`
+	// 代表者
+	Leader pgtype.UUID `json:"leader"`
+	// 担当者
+	Pic       pgtype.UUID `json:"pic"`
+	Memo      pgtype.Text `json:"memo"`
+	CreatedAt time.Time   `json:"created_at"`
 }
 
-type Session struct {
-	ID           uuid.UUID `json:"id"`
-	UserID       uuid.UUID `json:"user_id"`
-	RefreshToken string    `json:"refresh_token"`
-	UserAgent    string    `json:"user_agent"`
-	ClientIp     string    `json:"client_ip"`
-	IsBlocked    bool      `json:"is_blocked"`
-	ExpiresAt    time.Time `json:"expires_at"`
-	CreatedAt    time.Time `json:"created_at"`
+type Redial struct {
+	ID        uuid.UUID   `json:"id"`
+	UserID    uuid.UUID   `json:"user_id"`
+	Date      pgtype.Date `json:"date"`
+	Time      pgtype.Time `json:"time"`
+	CreatedAt time.Time   `json:"created_at"`
+}
+
+type Staff struct {
+	ID        uuid.UUID   `json:"id"`
+	Name      string      `json:"name"`
+	Sex       pgtype.Text `json:"sex"`
+	CreatedAt time.Time   `json:"created_at"`
 }
 
 type Status struct {
-	ID uuid.UUID `json:"id"`
+	ID   uuid.UUID `json:"id"`
+	Name string    `json:"name"`
 	// 有効数としてカウントするか
 	Effective pgtype.Bool `json:"effective"`
 	// NG
-	Ng pgtype.Bool `json:"ng"`
+	Ng        pgtype.Bool `json:"ng"`
+	CreatedAt time.Time   `json:"created_at"`
 }
 
 type User struct {
 	ID        uuid.UUID `json:"id"`
 	Email     string    `json:"email"`
 	Name      string    `json:"name"`
-	Password  string    `json:"password"`
+	Role      Role      `json:"role"`
 	CreatedAt time.Time `json:"created_at"`
 }

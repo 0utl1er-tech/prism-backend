@@ -17,12 +17,21 @@ Table Category {
   created_at timestamptz [not null, default: `now()`]
 }
 
+Table Redial {
+  id uuid [pk]
+  user_id uuid [not null]
+  date date [not null]
+  time time [not null]
+  created_at timestamptz [not null, default: `now()`]
+}
+
 //　顧客
 Table Customer {
   id uuid [pk]
   book_id uuid [not null]
   category_id uuid
   contact_id uuid [not null, unique]
+  redial_id uuid [unique]
   name varchar [not null]
   corporation varchar
   address varchar
@@ -69,7 +78,7 @@ Table User {
   id uuid [pk]
   email varchar [not null]
   name varchar [not null]
-  password varchar [not null]
+  role role [not null]
   created_at timestamptz [not null, default: `now()`]
 }
 
@@ -92,3 +101,7 @@ Ref: "Contact"."staff_id" - "Staff"."id"
 Ref: "Customer"."id" < "Contact"."customer_id"
 
 Ref: "Customer"."contact_id" - "Contact"."id"
+
+Ref: "Customer"."redial_id" < "Redial"."id"
+
+Ref: "User"."id" < "Redial"."user_id"

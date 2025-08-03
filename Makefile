@@ -1,16 +1,13 @@
-DB_URL=postgresql://root:secret@localhost:5432/account?sslmode=disable
-
-network:
-	docker network create foundation
+DB_URL=postgresql://root:secret@localhost:5432/prism?sslmode=disable
 
 postgres:
-	docker run --name account-postgres --network foundation -p 5432:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=secret -d postgres:14-alpine
+	docker run --name postgres -p 5432:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=secret -d postgres:17-alpine
 
 createdb:
-	docker exec -it account-postgres createdb --username=root --owner=root account
+	docker exec -it postgres createdb --username=root --owner=root prism
 
 dropdb:
-	docker exec -it account-postgres dropdb account --username=root 
+	docker exec -it postgres dropdb prism --username=root 
 
 migrateup:
 	migrate -path db/migration -database "$(DB_URL)" -verbose up

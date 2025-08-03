@@ -1,6 +1,6 @@
 -- SQL dump generated using DBML (dbml.dbdiagram.io)
 -- Database: PostgreSQL
--- Generated at: 2025-08-03T08:05:27.666Z
+-- Generated at: 2025-08-03T10:26:16.931Z
 
 CREATE TYPE "role" AS ENUM (
   'owner',
@@ -20,11 +20,20 @@ CREATE TABLE "Category" (
   "created_at" timestamptz NOT NULL DEFAULT (now())
 );
 
+CREATE TABLE "Redial" (
+  "id" uuid PRIMARY KEY,
+  "user_id" uuid NOT NULL,
+  "date" date NOT NULL,
+  "time" time NOT NULL,
+  "created_at" timestamptz NOT NULL DEFAULT (now())
+);
+
 CREATE TABLE "Customer" (
   "id" uuid PRIMARY KEY,
   "book_id" uuid NOT NULL,
   "category_id" uuid,
   "contact_id" uuid UNIQUE NOT NULL,
+  "redial_id" uuid UNIQUE,
   "name" varchar NOT NULL,
   "corporation" varchar,
   "address" varchar,
@@ -71,7 +80,7 @@ CREATE TABLE "User" (
   "id" uuid PRIMARY KEY,
   "email" varchar NOT NULL,
   "name" varchar NOT NULL,
-  "password" varchar NOT NULL,
+  "role" role NOT NULL,
   "created_at" timestamptz NOT NULL DEFAULT (now())
 );
 
@@ -104,3 +113,7 @@ ALTER TABLE "Staff" ADD FOREIGN KEY ("id") REFERENCES "Contact" ("staff_id");
 ALTER TABLE "Contact" ADD FOREIGN KEY ("customer_id") REFERENCES "Customer" ("id");
 
 ALTER TABLE "Contact" ADD FOREIGN KEY ("id") REFERENCES "Customer" ("contact_id");
+
+ALTER TABLE "Redial" ADD FOREIGN KEY ("id") REFERENCES "Customer" ("redial_id");
+
+ALTER TABLE "Redial" ADD FOREIGN KEY ("user_id") REFERENCES "User" ("id");

@@ -8,6 +8,8 @@ service BookService {
   rpc CreateBook(CreateBookRequest) returns (CreateBookResponse);
 }
 
-message CreateBookRequest {}
+message CreateBookRequest {
+  string name = 1;
+}
 
 message CreateBookResponse {}

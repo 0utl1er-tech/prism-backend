@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package staff.v1;
+
+option go_package = "github.com/0utl1er-tech/prism-backend/gen/pb/staff/v1;staffv1";
+
+message Staff {
+  string id = 1;
+  string name = 2;
+  string sex = 3;
+}

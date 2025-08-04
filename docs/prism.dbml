@@ -21,7 +21,7 @@ Table Redial {
   id uuid [pk]
   user_id uuid [not null]
   date date [not null]
-  time time [not null]
+  time time
   created_at timestamptz [not null, default: `now()`]
 }
 
@@ -30,6 +30,7 @@ Table Customer {
   id uuid [pk]
   book_id uuid [not null]
   category_id uuid
+  job varchar 
   name varchar [not null]
   corporation varchar
   address varchar
@@ -41,7 +42,7 @@ Table Customer {
 
 Table Staff {
   id uuid [pk]
-  name varchar [not null]
+  name varchar
   sex varchar
   created_at timestamptz [not null, default: `now()`]
 }

@@ -7,6 +7,7 @@ package db
 
 import (
 	"context"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgtype"
@@ -15,7 +16,7 @@ import (
 const createCustomer = `-- name: CreateCustomer :one
 INSERT INTO "Customer" (id, book_id, category_id, name, corporation, address, leader, pic, memo)
 VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
-RETURNING id, book_id, category_id, name, corporation, address, leader, pic, memo, created_at
+RETURNING id, book_id, category_id, job, name, corporation, address, leader, pic, memo, created_at
 `
 
 type CreateCustomerParams struct {
@@ -47,6 +48,7 @@ func (q *Queries) CreateCustomer(ctx context.Context, arg CreateCustomerParams) 
 		&i.ID,
 		&i.BookID,
 		&i.CategoryID,
+		&i.Job,
 		&i.Name,
 		&i.Corporation,
 		&i.Address,
@@ -68,15 +70,130 @@ func (q *Queries) DeleteCustomer(ctx context.Context, id uuid.UUID) error {
 	return err
 }
 
+const getCustomer = `-- name: GetCustomer :one
+SELECT 
+    c.id as customer_id,
+    c.book_id as customer_book_id,
+    c.category_id as customer_category_id,
+    c.job as customer_job,
+    c.name as customer_name,
+    c.corporation as customer_corporation,
+    c.address as customer_address,
+    c.leader as customer_leader,
+    c.pic as customer_pic,
+    c.memo as customer_memo,
+    c.created_at as customer_created_at,
+    ct.id as contact_id,
+    ct.customer_id as contact_customer_id,
+    ct.staff_id as contact_staff_id,
+    ct.phone as contact_phone,
+    ct.mail as contact_mail,
+    ct.fax as contact_fax,
+    ct.created_at as contact_created_at
+FROM "Customer" c
+LEFT JOIN "Contact" ct ON c.id = ct.id
+WHERE c.id = $1
+`
+
+type GetCustomerRow struct {
+	CustomerID          uuid.UUID          `json:"customer_id"`
+	CustomerBookID      uuid.UUID          `json:"customer_book_id"`
+	CustomerCategoryID  pgtype.UUID        `json:"customer_category_id"`
+	CustomerJob         pgtype.Text        `json:"customer_job"`
+	CustomerName        string             `json:"customer_name"`
+	CustomerCorporation pgtype.Text        `json:"customer_corporation"`
+	CustomerAddress     pgtype.Text        `json:"customer_address"`
+	CustomerLeader      pgtype.UUID        `json:"customer_leader"`
+	CustomerPic         pgtype.UUID        `json:"customer_pic"`
+	CustomerMemo        pgtype.Text        `json:"customer_memo"`
+	CustomerCreatedAt   time.Time          `json:"customer_created_at"`
+	ContactID           pgtype.UUID        `json:"contact_id"`
+	ContactCustomerID   pgtype.UUID        `json:"contact_customer_id"`
+	ContactStaffID      pgtype.UUID        `json:"contact_staff_id"`
+	ContactPhone        pgtype.Text        `json:"contact_phone"`
+	ContactMail         pgtype.Text        `json:"contact_mail"`
+	ContactFax          pgtype.Text        `json:"contact_fax"`
+	ContactCreatedAt    pgtype.Timestamptz `json:"contact_created_at"`
+}
+
+func (q *Queries) GetCustomer(ctx context.Context, id uuid.UUID) (GetCustomerRow, error) {
+	row := q.db.QueryRow(ctx, getCustomer, id)
+	var i GetCustomerRow
+	err := row.Scan(
+		&i.CustomerID,
+		&i.CustomerBookID,
+		&i.CustomerCategoryID,
+		&i.CustomerJob,
+		&i.CustomerName,
+		&i.CustomerCorporation,
+		&i.CustomerAddress,
+		&i.CustomerLeader,
+		&i.CustomerPic,
+		&i.CustomerMemo,
+		&i.CustomerCreatedAt,
+		&i.ContactID,
+		&i.ContactCustomerID,
+		&i.ContactStaffID,
+		&i.ContactPhone,
+		&i.ContactMail,
+		&i.ContactFax,
+		&i.ContactCreatedAt,
+	)
+	return i, err
+}
+
+const getCustomerByBookId = `-- name: GetCustomerByBookId :many
+SELECT id, book_id, category_id, job, name, corporation, address, leader, pic, memo, created_at FROM "Customer"
+WHERE book_id = $1
+ORDER BY created_at DESC
+LIMIT $2 OFFSET $3
+`
+
+type GetCustomerByBookIdParams struct {
+	BookID uuid.UUID `json:"book_id"`
+	Limit  int32     `json:"limit"`
+	Offset int32     `json:"offset"`
+}
+
+func (q *Queries) GetCustomerByBookId(ctx context.Context, arg GetCustomerByBookIdParams) ([]Customer, error) {
+	rows, err := q.db.Query(ctx, getCustomerByBookId, arg.BookID, arg.Limit, arg.Offset)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []Customer{}
+	for rows.Next() {
+		var i Customer
+		if err := rows.Scan(
+			&i.ID,
+			&i.BookID,
+			&i.CategoryID,
+			&i.Job,
+			&i.Name,
+			&i.Corporation,
+			&i.Address,
+			&i.Leader,
+			&i.Pic,
+			&i.Memo,
+			&i.CreatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const searchCustomer = `-- name: SearchCustomer :many
-SELECT id, book_id, category_id, name, corporation, address, leader, pic, memo, created_at FROM "Customer"
+SELECT id, book_id, category_id, job, name, corporation, address, leader, pic, memo, created_at FROM "Customer"
 WHERE book_id = COALESCE($1, book_id)
 AND name ILIKE '%' || COALESCE($2, name) || '%'
 AND corporation ILIKE '%' || COALESCE($3, corporation) || '%'
 AND address ILIKE '%' || COALESCE($4, address) || '%'
-AND leader = COALESCE($5, leader)
-AND pic = COALESCE($6, pic) 
-AND memo ILIKE '%' || COALESCE($7, memo) || '%'
+AND memo ILIKE '%' || COALESCE($5, memo) || '%'
 `
 
 type SearchCustomerParams struct {
@@ -84,8 +201,6 @@ type SearchCustomerParams struct {
 	Name        pgtype.Text `json:"name"`
 	Corporation pgtype.Text `json:"corporation"`
 	Address     pgtype.Text `json:"address"`
-	Leader      pgtype.UUID `json:"leader"`
-	Pic         pgtype.UUID `json:"pic"`
 	Memo        pgtype.Text `json:"memo"`
 }
 
@@ -95,8 +210,6 @@ func (q *Queries) SearchCustomer(ctx context.Context, arg SearchCustomerParams) 
 		arg.Name,
 		arg.Corporation,
 		arg.Address,
-		arg.Leader,
-		arg.Pic,
 		arg.Memo,
 	)
 	if err != nil {
@@ -110,6 +223,7 @@ func (q *Queries) SearchCustomer(ctx context.Context, arg SearchCustomerParams) 
 			&i.ID,
 			&i.BookID,
 			&i.CategoryID,
+			&i.Job,
 			&i.Name,
 			&i.Corporation,
 			&i.Address,
@@ -138,7 +252,7 @@ SET
   memo = COALESCE($5, memo)
 WHERE
   id = $6
-RETURNING id, book_id, category_id, name, corporation, address, leader, pic, memo, created_at
+RETURNING id, book_id, category_id, job, name, corporation, address, leader, pic, memo, created_at
 `
 
 type UpdateCustomerParams struct {
@@ -164,6 +278,7 @@ func (q *Queries) UpdateCustomer(ctx context.Context, arg UpdateCustomerParams) 
 		&i.ID,
 		&i.BookID,
 		&i.CategoryID,
+		&i.Job,
 		&i.Name,
 		&i.Corporation,
 		&i.Address,

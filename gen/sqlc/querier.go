@@ -30,6 +30,8 @@ type Querier interface {
 	GetBook(ctx context.Context, id uuid.UUID) (Book, error)
 	GetCategory(ctx context.Context, id uuid.UUID) (Category, error)
 	GetContact(ctx context.Context, id uuid.UUID) (Contact, error)
+	GetCustomer(ctx context.Context, id uuid.UUID) (GetCustomerRow, error)
+	GetCustomerByBookId(ctx context.Context, arg GetCustomerByBookIdParams) ([]Customer, error)
 	GetRedial(ctx context.Context, id uuid.UUID) (Redial, error)
 	GetStaff(ctx context.Context, id uuid.UUID) (Staff, error)
 	GetStatus(ctx context.Context, id uuid.UUID) (Status, error)

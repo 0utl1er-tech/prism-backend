@@ -20,7 +20,7 @@ RETURNING id, name, sex, created_at
 
 type CreateStaffParams struct {
 	ID   uuid.UUID   `json:"id"`
-	Name string      `json:"name"`
+	Name pgtype.Text `json:"name"`
 	Sex  pgtype.Text `json:"sex"`
 }
 

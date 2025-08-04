@@ -1,6 +1,6 @@
 -- SQL dump generated using DBML (dbml.dbdiagram.io)
 -- Database: PostgreSQL
--- Generated at: 2025-08-03T11:28:32.192Z
+-- Generated at: 2025-08-04T10:25:09.731Z
 
 CREATE TYPE "role" AS ENUM (
   'owner',
@@ -32,6 +32,7 @@ CREATE TABLE "Customer" (
   "id" uuid PRIMARY KEY,
   "book_id" uuid NOT NULL,
   "category_id" uuid,
+  "job" varchar,
   "name" varchar NOT NULL,
   "corporation" varchar,
   "address" varchar,
@@ -43,7 +44,7 @@ CREATE TABLE "Customer" (
 
 CREATE TABLE "Staff" (
   "id" uuid PRIMARY KEY,
-  "name" varchar NOT NULL,
+  "name" varchar,
   "sex" varchar,
   "created_at" timestamptz NOT NULL DEFAULT (now())
 );

@@ -19,7 +19,10 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	CustomerService_CreateCustomer_FullMethodName = "/customer.v1.CustomerService/CreateCustomer"
+	CustomerService_CreateCustomer_FullMethodName      = "/customer.v1.CustomerService/CreateCustomer"
+	CustomerService_GetCustomer_FullMethodName         = "/customer.v1.CustomerService/GetCustomer"
+	CustomerService_GetCustomerByBookId_FullMethodName = "/customer.v1.CustomerService/GetCustomerByBookId"
+	CustomerService_SearchCustomer_FullMethodName      = "/customer.v1.CustomerService/SearchCustomer"
 )
 
 // CustomerServiceClient is the client API for CustomerService service.
@@ -27,6 +30,9 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type CustomerServiceClient interface {
 	CreateCustomer(ctx context.Context, in *CreateCustomerRequest, opts ...grpc.CallOption) (*CreateCustomerResponse, error)
+	GetCustomer(ctx context.Context, in *GetCustomerRequest, opts ...grpc.CallOption) (*GetCustomerResponse, error)
+	GetCustomerByBookId(ctx context.Context, in *GetCustomerByBookIdRequest, opts ...grpc.CallOption) (*GetCustomerByBookIdResponse, error)
+	SearchCustomer(ctx context.Context, in *SearchCustomerRequest, opts ...grpc.CallOption) (*SearchCustomerResponse, error)
 }
 
 type customerServiceClient struct {
@@ -47,11 +53,44 @@ func (c *customerServiceClient) CreateCustomer(ctx context.Context, in *CreateCu
 	return out, nil
 }
 
+func (c *customerServiceClient) GetCustomer(ctx context.Context, in *GetCustomerRequest, opts ...grpc.CallOption) (*GetCustomerResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetCustomerResponse)
+	err := c.cc.Invoke(ctx, CustomerService_GetCustomer_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *customerServiceClient) GetCustomerByBookId(ctx context.Context, in *GetCustomerByBookIdRequest, opts ...grpc.CallOption) (*GetCustomerByBookIdResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetCustomerByBookIdResponse)
+	err := c.cc.Invoke(ctx, CustomerService_GetCustomerByBookId_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *customerServiceClient) SearchCustomer(ctx context.Context, in *SearchCustomerRequest, opts ...grpc.CallOption) (*SearchCustomerResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SearchCustomerResponse)
+	err := c.cc.Invoke(ctx, CustomerService_SearchCustomer_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // CustomerServiceServer is the server API for CustomerService service.
 // All implementations must embed UnimplementedCustomerServiceServer
 // for forward compatibility.
 type CustomerServiceServer interface {
 	CreateCustomer(context.Context, *CreateCustomerRequest) (*CreateCustomerResponse, error)
+	GetCustomer(context.Context, *GetCustomerRequest) (*GetCustomerResponse, error)
+	GetCustomerByBookId(context.Context, *GetCustomerByBookIdRequest) (*GetCustomerByBookIdResponse, error)
+	SearchCustomer(context.Context, *SearchCustomerRequest) (*SearchCustomerResponse, error)
 	mustEmbedUnimplementedCustomerServiceServer()
 }
 
@@ -64,6 +103,15 @@ type UnimplementedCustomerServiceServer struct{}
 
 func (UnimplementedCustomerServiceServer) CreateCustomer(context.Context, *CreateCustomerRequest) (*CreateCustomerResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateCustomer not implemented")
+}
+func (UnimplementedCustomerServiceServer) GetCustomer(context.Context, *GetCustomerRequest) (*GetCustomerResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetCustomer not implemented")
+}
+func (UnimplementedCustomerServiceServer) GetCustomerByBookId(context.Context, *GetCustomerByBookIdRequest) (*GetCustomerByBookIdResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetCustomerByBookId not implemented")
+}
+func (UnimplementedCustomerServiceServer) SearchCustomer(context.Context, *SearchCustomerRequest) (*SearchCustomerResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SearchCustomer not implemented")
 }
 func (UnimplementedCustomerServiceServer) mustEmbedUnimplementedCustomerServiceServer() {}
 func (UnimplementedCustomerServiceServer) testEmbeddedByValue()                         {}
@@ -104,6 +152,60 @@ func _CustomerService_CreateCustomer_Handler(srv interface{}, ctx context.Contex
 	return interceptor(ctx, in, info, handler)
 }
 
+func _CustomerService_GetCustomer_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetCustomerRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CustomerServiceServer).GetCustomer(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: CustomerService_GetCustomer_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CustomerServiceServer).GetCustomer(ctx, req.(*GetCustomerRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _CustomerService_GetCustomerByBookId_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetCustomerByBookIdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CustomerServiceServer).GetCustomerByBookId(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: CustomerService_GetCustomerByBookId_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CustomerServiceServer).GetCustomerByBookId(ctx, req.(*GetCustomerByBookIdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _CustomerService_SearchCustomer_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SearchCustomerRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CustomerServiceServer).SearchCustomer(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: CustomerService_SearchCustomer_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CustomerServiceServer).SearchCustomer(ctx, req.(*SearchCustomerRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // CustomerService_ServiceDesc is the grpc.ServiceDesc for CustomerService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -114,6 +216,18 @@ var CustomerService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CreateCustomer",
 			Handler:    _CustomerService_CreateCustomer_Handler,
+		},
+		{
+			MethodName: "GetCustomer",
+			Handler:    _CustomerService_GetCustomer_Handler,
+		},
+		{
+			MethodName: "GetCustomerByBookId",
+			Handler:    _CustomerService_GetCustomerByBookId_Handler,
+		},
+		{
+			MethodName: "SearchCustomer",
+			Handler:    _CustomerService_SearchCustomer_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

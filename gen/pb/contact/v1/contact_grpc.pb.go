@@ -20,6 +20,7 @@ const _ = grpc.SupportPackageIsVersion9
 
 const (
 	ContactService_CreateContact_FullMethodName = "/contact.v1.ContactService/CreateContact"
+	ContactService_GetContact_FullMethodName    = "/contact.v1.ContactService/GetContact"
 )
 
 // ContactServiceClient is the client API for ContactService service.
@@ -27,6 +28,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ContactServiceClient interface {
 	CreateContact(ctx context.Context, in *CreateContactRequest, opts ...grpc.CallOption) (*CreateContactResponse, error)
+	GetContact(ctx context.Context, in *GetContactRequest, opts ...grpc.CallOption) (*GetContactResponse, error)
 }
 
 type contactServiceClient struct {
@@ -47,11 +49,22 @@ func (c *contactServiceClient) CreateContact(ctx context.Context, in *CreateCont
 	return out, nil
 }
 
+func (c *contactServiceClient) GetContact(ctx context.Context, in *GetContactRequest, opts ...grpc.CallOption) (*GetContactResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetContactResponse)
+	err := c.cc.Invoke(ctx, ContactService_GetContact_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ContactServiceServer is the server API for ContactService service.
 // All implementations must embed UnimplementedContactServiceServer
 // for forward compatibility.
 type ContactServiceServer interface {
 	CreateContact(context.Context, *CreateContactRequest) (*CreateContactResponse, error)
+	GetContact(context.Context, *GetContactRequest) (*GetContactResponse, error)
 	mustEmbedUnimplementedContactServiceServer()
 }
 
@@ -64,6 +77,9 @@ type UnimplementedContactServiceServer struct{}
 
 func (UnimplementedContactServiceServer) CreateContact(context.Context, *CreateContactRequest) (*CreateContactResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateContact not implemented")
+}
+func (UnimplementedContactServiceServer) GetContact(context.Context, *GetContactRequest) (*GetContactResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetContact not implemented")
 }
 func (UnimplementedContactServiceServer) mustEmbedUnimplementedContactServiceServer() {}
 func (UnimplementedContactServiceServer) testEmbeddedByValue()                        {}
@@ -104,6 +120,24 @@ func _ContactService_CreateContact_Handler(srv interface{}, ctx context.Context,
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ContactService_GetContact_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetContactRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ContactServiceServer).GetContact(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ContactService_GetContact_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ContactServiceServer).GetContact(ctx, req.(*GetContactRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ContactService_ServiceDesc is the grpc.ServiceDesc for ContactService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -114,6 +148,10 @@ var ContactService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CreateContact",
 			Handler:    _ContactService_CreateContact_Handler,
+		},
+		{
+			MethodName: "GetContact",
+			Handler:    _ContactService_GetContact_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

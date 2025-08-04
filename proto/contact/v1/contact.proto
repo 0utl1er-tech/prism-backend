@@ -2,10 +2,30 @@ syntax = "proto3";
 
 package contact.v1;
 
+import "google/api/annotations.proto";
+import "staff/v1/service.proto";
+
 option go_package = "github.com/0utl1er-tech/prism-backend/gen/pb/contact/v1;contactv1";
 
 service ContactService {
-  rpc CreateContact(CreateContactRequest) returns (CreateContactResponse);
+  rpc CreateContact(CreateContactRequest) returns (CreateContactResponse) {
+    option (google.api.http) = {
+      post: "/v1/contact"
+      body: "*"
+    };
+  }
+  rpc GetContact(GetContactRequest) returns (GetContactResponse) {
+    option (google.api.http) = {get: "/v1/contact/{id}"};
+  }
+}
+
+message Contact {
+  string id = 1;
+  string name = 2;
+  string mail = 3;
+  string phone = 4;
+  string fax = 5;
+  optional staff.v1.Staff staff = 6;
 }
 
 message CreateContactRequest {
@@ -17,4 +37,16 @@ message CreateContactRequest {
 
 message CreateContactResponse {
   string id = 1;
+}
+
+message GetContactRequest {
+  string id = 1;
+}
+
+message GetContactResponse {
+  string id = 1;
+  string name = 2;
+  string email = 3;
+  string phone = 4;
+  string message = 5;
 }

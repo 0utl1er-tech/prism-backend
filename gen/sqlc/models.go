@@ -91,6 +91,7 @@ type Customer struct {
 	ID          uuid.UUID   `json:"id"`
 	BookID      uuid.UUID   `json:"book_id"`
 	CategoryID  pgtype.UUID `json:"category_id"`
+	Job         pgtype.Text `json:"job"`
 	Name        string      `json:"name"`
 	Corporation pgtype.Text `json:"corporation"`
 	Address     pgtype.Text `json:"address"`
@@ -112,7 +113,7 @@ type Redial struct {
 
 type Staff struct {
 	ID        uuid.UUID   `json:"id"`
-	Name      string      `json:"name"`
+	Name      pgtype.Text `json:"name"`
 	Sex       pgtype.Text `json:"sex"`
 	CreatedAt time.Time   `json:"created_at"`
 }

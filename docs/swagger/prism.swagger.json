@@ -115,6 +115,194 @@
           "BookService"
         ]
       }
+    },
+    "/v1/contact": {
+      "post": {
+        "operationId": "ContactService_CreateContact",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1CreateContactResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1CreateContactRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ContactService"
+        ]
+      }
+    },
+    "/v1/contact/{id}": {
+      "get": {
+        "operationId": "ContactService_GetContact",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GetContactResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "ContactService"
+        ]
+      }
+    },
+    "/v1/customers": {
+      "post": {
+        "operationId": "CustomerService_CreateCustomer",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1CreateCustomerResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1CreateCustomerRequest"
+            }
+          }
+        ],
+        "tags": [
+          "CustomerService"
+        ]
+      }
+    },
+    "/v1/customers/book": {
+      "post": {
+        "operationId": "CustomerService_GetCustomerByBookId",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GetCustomerByBookIdResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1GetCustomerByBookIdRequest"
+            }
+          }
+        ],
+        "tags": [
+          "CustomerService"
+        ]
+      }
+    },
+    "/v1/customers/search": {
+      "post": {
+        "operationId": "CustomerService_SearchCustomer",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1SearchCustomerResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1SearchCustomerRequest"
+            }
+          }
+        ],
+        "tags": [
+          "CustomerService"
+        ]
+      }
+    },
+    "/v1/customers/{id}": {
+      "get": {
+        "operationId": "CustomerService_GetCustomer",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GetCustomerResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "CustomerService"
+        ]
+      }
     }
   },
   "definitions": {
@@ -165,6 +353,46 @@
         }
       }
     },
+    "v1Contact": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "mail": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        },
+        "fax": {
+          "type": "string"
+        },
+        "staff": {
+          "$ref": "#/definitions/v1Staff"
+        }
+      }
+    },
+    "v1CreateContactRequest": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
     "v1CreateContactResponse": {
       "type": "object",
       "properties": {
@@ -173,10 +401,101 @@
         }
       }
     },
+    "v1CreateCustomerRequest": {
+      "type": "object",
+      "properties": {
+        "bookId": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        },
+        "corporation": {
+          "type": "string"
+        },
+        "address": {
+          "type": "string"
+        },
+        "memo": {
+          "type": "string"
+        },
+        "leader": {
+          "type": "string"
+        },
+        "leaderSex": {
+          "type": "string"
+        },
+        "pic": {
+          "type": "string"
+        },
+        "picSex": {
+          "type": "string"
+        },
+        "contact": {
+          "$ref": "#/definitions/v1Contact"
+        }
+      }
+    },
     "v1CreateCustomerResponse": {
       "type": "object",
       "properties": {
         "id": {
+          "type": "string"
+        },
+        "bookId": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "corporation": {
+          "type": "string"
+        },
+        "address": {
+          "type": "string"
+        },
+        "memo": {
+          "type": "string"
+        }
+      }
+    },
+    "v1Customer": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "job": {
+          "type": "string"
+        },
+        "corporation": {
+          "type": "string"
+        },
+        "address": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        },
+        "leader": {
+          "type": "string"
+        },
+        "leaderSex": {
+          "type": "string"
+        },
+        "pic": {
+          "type": "string"
+        },
+        "picSex": {
+          "type": "string"
+        },
+        "memo": {
           "type": "string"
         }
       }
@@ -193,6 +512,165 @@
             "type": "object",
             "$ref": "#/definitions/v1Book"
           }
+        }
+      }
+    },
+    "v1GetContactResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "v1GetCustomerByBookIdRequest": {
+      "type": "object",
+      "properties": {
+        "bookId": {
+          "type": "string"
+        },
+        "page": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "limit": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "v1GetCustomerByBookIdResponse": {
+      "type": "object",
+      "properties": {
+        "customers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Customer"
+          }
+        },
+        "total": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "page": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "limit": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "v1GetCustomerResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "job": {
+          "type": "string"
+        },
+        "corporation": {
+          "type": "string"
+        },
+        "address": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        },
+        "leader": {
+          "type": "string"
+        },
+        "leaderSex": {
+          "type": "string"
+        },
+        "pic": {
+          "type": "string"
+        },
+        "picSex": {
+          "type": "string"
+        },
+        "memo": {
+          "type": "string"
+        },
+        "mail": {
+          "type": "string"
+        },
+        "fax": {
+          "type": "string"
+        },
+        "contact": {
+          "$ref": "#/definitions/v1Contact"
+        }
+      }
+    },
+    "v1SearchCustomerRequest": {
+      "type": "object",
+      "properties": {
+        "bookId": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "corporation": {
+          "type": "string"
+        },
+        "address": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        },
+        "memo": {
+          "type": "string"
+        },
+        "contact": {
+          "$ref": "#/definitions/v1Contact"
+        }
+      }
+    },
+    "v1SearchCustomerResponse": {
+      "type": "object",
+      "properties": {
+        "customers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Customer"
+          }
+        }
+      }
+    },
+    "v1Staff": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "sex": {
+          "type": "string"
         }
       }
     },
